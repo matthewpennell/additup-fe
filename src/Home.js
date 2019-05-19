@@ -11,7 +11,7 @@ class Home extends React.Component {
     }
 
     componentDidMount() {
-        fetch('http://additup.api/api/accounts/1', {
+        fetch('http://additup.api/api/accounts/1/transactions', {
             method: 'GET',
         }).then(result => {
             return result.json();
@@ -33,20 +33,32 @@ class Home extends React.Component {
                 {isLoaded ? (
                     <React.Fragment>
                         <h2>{data.name} ({data.number})</h2>
-                        {data.transactions.map(row => 
-                            <React.Fragment key={row.id}>
+                        <table>
+                            <thead>
                                 <tr>
-                                    <td style={{ padding: '5px' }}>
-                                        {date !== row.date && (date = row.date) &&
-                                            <date>{row.date}</date>
-                                        }
-                                    </td>
-                                    <td style={{ padding: '5px' }}>{row.data}</td>
-                                    <td style={{ padding: '5px' }}><a href={'/category/' + row.category.id}>{row.category.name}</a></td>
-                                    <td style={{ padding: '5px' }} align="right">£{row.amount}</td>
+                                    <th>Date</th>
+                                    <th>Transaction</th>
+                                    <th>Category</th>
+                                    <th>Amount</th>
                                 </tr>
-                            </React.Fragment>
-                        )}
+                            </thead>
+                            <tbody>
+                                {data.transactions.map(row => 
+                                    <React.Fragment key={row.id}>
+                                        <tr>
+                                            <td style={{ padding: '5px' }}>
+                                                {date !== row.date && (date = row.date) && row.date}
+                                            </td>
+                                            <td style={{ padding: '5px' }}>{row.data}</td>
+                                            <td style={{ padding: '5px' }}><a href={'/category/' + row.category.id}>{row.category.name}</a></td>
+                                            <td style={{ padding: '5px' }} align="right">
+                                                <div style={row.amount >= 0 ? { color: 'green' } : { color: 'red' }}>£{row.amount}</div>
+                                            </td>
+                                        </tr>
+                                    </React.Fragment>
+                                )}
+                            </tbody>
+                        </table>
                     </React.Fragment>
                 ) : (
                     <p>Loading account data...</p>
